@@ -39,9 +39,9 @@ jobs:
 #        run: java -jar zdm.jar
       - name: git add files
         run: |
+          git mv -v pushed.txt a.txt
 #          git add pushed.txt
 #          git add unpushed.txt
-          git mv -v pushed.txt a.txt
       - name: commit & push
         uses: actions-go/push@master
         with:
