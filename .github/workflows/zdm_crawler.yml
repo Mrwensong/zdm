@@ -47,4 +47,4 @@ jobs:
           author-email: '2739934654@qq.com'
           author-name: 'Mrwensong'
           commit-message: 'update articles'
-          token: ${{ secrets.GIT_TOKEN }}
+          token: ${{ secrets.GIT_TOKEN}}
