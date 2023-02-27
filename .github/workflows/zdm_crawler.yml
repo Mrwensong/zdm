@@ -48,4 +48,4 @@ jobs:
           author-name: 'Mrwensong'
           commit-message: 'update articles'
           remote: origin
-          token: ${{ secrets.EMAILACCOUNT.TOKEN }}
+          token: ${{ secrets.TOKEN }}
