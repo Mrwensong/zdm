@@ -40,7 +40,7 @@ jobs:
         run: |
           git mv -v pushed.txt a.txt
 #          git add pushed.txt
-          git add unpushed.txt
+#          git add unpushed.txt
       - name: commit & push
         uses: actions-go/push@master
         with:
