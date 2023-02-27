@@ -41,10 +41,10 @@ jobs:
           git mv -v pushed.txt a.txt
 #          git add pushed.txt
 #          git add unpushed.txt
-      - name: commit & push
-        uses: actions-go/push@master
-        with:
-          author-email: '2739934654@qq.com'
-          author-name: 'Mrwensong'
-          commit-message: 'update articles'
-          token: ${{ secrets.GIT_TOKEN }}
+#      - name: commit & push
+#        uses: actions-go/push@master
+#        with:
+#          author-email: '2739934654@qq.com'
+#          author-name: 'Mrwensong'
+#          commit-message: 'update articles'
+#          token: ${{ secrets.GIT_TOKEN }}
