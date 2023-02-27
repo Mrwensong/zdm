@@ -36,14 +36,14 @@ jobs:
           # 接收优惠信息的邮箱的授权码
           emailPassword: ${{secrets.emailPassword}}
         run: java -jar zdm.jar
-      - name: git add files
-        run: |
-          git add pushed.txt
-          git add unpushed.txt
-      - name: commit & push
-        uses: actions-go/push@master
-        with:
-          author-email: '2739934654@qq.com'
-          author-name: 'Mrwensong'
-          commit-message: 'update articles'
-          token: ${{ secrets.GIT_TOKEN }}
+#      - name: git add files
+#        run: |
+#          git add pushed.txt
+#          git add unpushed.txt
+#      - name: commit & push
+#        uses: actions-go/push@master
+#        with:
+#          author-email: '2739934654@qq.com'
+#          author-name: 'Mrwensong'
+#          commit-message: 'update articles'
+#          token: ${{ secrets.GIT_TOKEN }}
