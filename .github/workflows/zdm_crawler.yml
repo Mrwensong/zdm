@@ -39,8 +39,7 @@ jobs:
 #        run: java -jar zdm.jar
       - name: git add files
         run: |
-          git status
-#          git mv -v pushed.txt a.txt
+          git mv -v pushed.txt a.txt
 #          git add pushed.txt
 #          git add unpushed.txt
       - name: commit & push
