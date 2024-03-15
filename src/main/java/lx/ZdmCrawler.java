@@ -3,14 +3,7 @@ package lx;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Properties;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import javax.mail.Authenticator;
@@ -71,10 +64,13 @@ public class ZdmCrawler {
                         && z.getArticleMall().contains("京东")
         ));
         zdms.forEach(z -> System.out.println(z.getArticleId() + " | " + z.getTitle()));
-
-        if (zdms.size() > Integer.parseInt(System.getenv("MIN_PUSH_SIZE"))) {
-            send(Utils.buildMessage(new ArrayList<>(zdms)));
-            Utils.write("./pushed.txt", true, StreamUtils.map(zdms, Zdm::getArticleId));
+        if (new Date().getHours() == 21) {
+            if (zdms.size() > Integer.parseInt(System.getenv("MIN_PUSH_SIZE"))) {
+                send(Utils.buildMessage(new ArrayList<>(zdms)));
+                Utils.write("./pushed.txt", true, StreamUtils.map(zdms, Zdm::getArticleId));
+            } else {
+                Utils.write("./unpushed.txt", false, StreamUtils.map(zdms, JSONObject::toJSONString));
+            }
         } else {
             Utils.write("./unpushed.txt", false, StreamUtils.map(zdms, JSONObject::toJSONString));
         }
