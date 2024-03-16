@@ -64,16 +64,12 @@ public class ZdmCrawler {
                         && z.getArticleMall().contains("京东")
         ));
         zdms.forEach(z -> System.out.println(z.getArticleId() + " | " + z.getTitle()));
-        if (new Date().getHours() == 22) {
             if (zdms.size() > Integer.parseInt(System.getenv("MIN_PUSH_SIZE"))) {
                 send(Utils.buildMessage(new ArrayList<>(zdms)));
                 Utils.write("./pushed.txt", true, StreamUtils.map(zdms, Zdm::getArticleId));
             } else {
                 Utils.write("./unpushed.txt", false, StreamUtils.map(zdms, JSONObject::toJSONString));
             }
-        } else {
-            Utils.write("./unpushed.txt", false, StreamUtils.map(zdms, JSONObject::toJSONString));
-        }
     }
 
     public static void send(String text) {
