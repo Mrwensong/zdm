@@ -26,51 +26,51 @@ import lx.utils.Utils;
 import static lx.utils.Const.ZDM_URL;
 
 public class ZdmCrawler {
-
-    public static void main(String[] args) {
-        Set<Zdm> zdms = ZDM_URL.stream().map(url -> {
-            List<Zdm> zdmPage = new ArrayList<>();
-            for (int i = 1; i <= 20; i++) {
-                String s = HttpUtil.get(url + i, 10000);
-                List<Zdm> zdmPart = JSONObject.parseArray(s, Zdm.class);
-                zdmPart.forEach(zdm -> {
-                    if (zdm.getComments().endsWith("k")) {
-                        String comments = zdm.getComments().substring(0, zdm.getComments().length() - 2);
-                        zdm.setComments(new BigDecimal(comments).multiply(new BigDecimal(1000)).toString());
-                    }
-                    if (zdm.getVoted().endsWith("k")) {
-                        String voted = zdm.getVoted().substring(0, zdm.getComments().length() - 2);
-                        zdm.setVoted(new BigDecimal(voted).multiply(new BigDecimal(1000)).toString());
-                    }
-                });
-                zdmPage.addAll(zdmPart);
-            }
-            return zdmPage;
-        }).flatMap(Collection::stream).sorted(Comparator.comparing(Zdm::getComments).reversed()).collect(Collectors.toCollection(LinkedHashSet::new));
-
-        HashSet<String> unPushed = Utils.readFile("./unpushed.txt");
-        zdms.addAll(StreamUtils.map(unPushed, o -> JSONObject.parseObject(o, Zdm.class)));
-
-        HashSet<String> blackWords = Utils.readFile("./black_words.txt");
-        blackWords.remove("");
-        HashSet<String> pushedIds = Utils.readFile("./pushed.txt");
-
-        zdms = new HashSet<>(StreamUtils.filter(zdms, z ->
-                StringUtils.isBlank(StreamUtils.findFirst(blackWords, w -> z.getTitle().contains(w))) //不包含黑词
-                        && Integer.parseInt(z.getVoted()) > Integer.parseInt(System.getenv("minVoted")) //值的数量
-                        && Integer.parseInt(z.getComments()) > Integer.parseInt(System.getenv("minComments")) //评论的数量
-                        && !z.getPrice().contains("前") //不是前xxx名的耍猴抢购
-                        && !pushedIds.contains(z.getArticleId()) //不是已经推送过的
-                        && z.getArticleMall().contains("京东")
-        ));
-        zdms.forEach(z -> System.out.println(z.getArticleId() + " | " + z.getTitle()));
-            if (zdms.size() > Integer.parseInt(System.getenv("MIN_PUSH_SIZE"))) {
-                send(Utils.buildMessage(new ArrayList<>(zdms)));
-                Utils.write("./pushed.txt", true, StreamUtils.map(zdms, Zdm::getArticleId));
-            } else {
-                Utils.write("./unpushed.txt", false, StreamUtils.map(zdms, JSONObject::toJSONString));
-            }
-    }
+//
+//    public static void main(String[] args) {
+//        Set<Zdm> zdms = ZDM_URL.stream().map(url -> {
+//            List<Zdm> zdmPage = new ArrayList<>();
+//            for (int i = 1; i <= 20; i++) {
+//                String s = HttpUtil.get(url + i, 10000);
+//                List<Zdm> zdmPart = JSONObject.parseArray(s, Zdm.class);
+//                zdmPart.forEach(zdm -> {
+//                    if (zdm.getComments().endsWith("k")) {
+//                        String comments = zdm.getComments().substring(0, zdm.getComments().length() - 2);
+//                        zdm.setComments(new BigDecimal(comments).multiply(new BigDecimal(1000)).toString());
+//                    }
+//                    if (zdm.getVoted().endsWith("k")) {
+//                        String voted = zdm.getVoted().substring(0, zdm.getComments().length() - 2);
+//                        zdm.setVoted(new BigDecimal(voted).multiply(new BigDecimal(1000)).toString());
+//                    }
+//                });
+//                zdmPage.addAll(zdmPart);
+//            }
+//            return zdmPage;
+//        }).flatMap(Collection::stream).sorted(Comparator.comparing(Zdm::getComments).reversed()).collect(Collectors.toCollection(LinkedHashSet::new));
+//
+//        HashSet<String> unPushed = Utils.readFile("./unpushed.txt");
+//        zdms.addAll(StreamUtils.map(unPushed, o -> JSONObject.parseObject(o, Zdm.class)));
+//
+//        HashSet<String> blackWords = Utils.readFile("./black_words.txt");
+//        blackWords.remove("");
+//        HashSet<String> pushedIds = Utils.readFile("./pushed.txt");
+//
+//        zdms = new HashSet<>(StreamUtils.filter(zdms, z ->
+//                StringUtils.isBlank(StreamUtils.findFirst(blackWords, w -> z.getTitle().contains(w))) //不包含黑词
+//                        && Integer.parseInt(z.getVoted()) > Integer.parseInt(System.getenv("minVoted")) //值的数量
+//                        && Integer.parseInt(z.getComments()) > Integer.parseInt(System.getenv("minComments")) //评论的数量
+//                        && !z.getPrice().contains("前") //不是前xxx名的耍猴抢购
+//                        && !pushedIds.contains(z.getArticleId()) //不是已经推送过的
+//                        && z.getArticleMall().contains("京东")
+//        ));
+//        zdms.forEach(z -> System.out.println(z.getArticleId() + " | " + z.getTitle()));
+//            if (zdms.size() > Integer.parseInt(System.getenv("MIN_PUSH_SIZE"))) {
+//                send(Utils.buildMessage(new ArrayList<>(zdms)));
+//                Utils.write("./pushed.txt", true, StreamUtils.map(zdms, Zdm::getArticleId));
+//            } else {
+//                Utils.write("./unpushed.txt", false, StreamUtils.map(zdms, JSONObject::toJSONString));
+//            }
+//    }
 
     public static void send(String text) {
         Properties props = new Properties();
